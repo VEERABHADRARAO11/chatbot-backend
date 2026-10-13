@@ -14,9 +14,6 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 // Load environment variables
 dotenv.config();
 
-// Connect to MongoDB
-connectDB();
-
 const app = express();
 
 // Middlewares
@@ -28,6 +25,16 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Ensure DB is connected before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Health check endpoint
 app.get('/', (req, res) => {
@@ -50,8 +57,13 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(` Server is running on port ${PORT}`);
-  console.log(` Health check available at: http://localhost:${PORT}/`);
-  console.log(` Chat API route ready at: http://localhost:${PORT}/api/chat`);
-});
+// Run the server locally only; Vercel handles this in production
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Health check available at: http://localhost:${PORT}/`);
+    console.log(`Chat API route ready at: http://localhost:${PORT}/api/chat`);
+  });
+}
+
+export default app;

@@ -1,14 +1,27 @@
 import mongoose from 'mongoose';
 
+let cached = global._mongoose;
+if (!cached) cached = global._mongoose = { conn: null, promise: null };
+
 const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
-    console.log(` MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(` MongoDB Connection Error: ${error.message}`);
-    console.error('Make sure your local MongoDB service is running or check your MongoDB Atlas URI in server/.env');
-    process.exit(1);
+  if (cached.conn) return cached.conn;
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000
+    });
   }
+
+  try {
+    cached.conn = await cached.promise;
+    console.log(`MongoDB Connected: ${cached.conn.connection.host}`);
+  } catch (error) {
+    cached.promise = null;
+    console.error(`MongoDB Connection Error: ${error.message}`);
+    throw error;
+  }
+
+  return cached.conn;
 };
 
 export default connectDB;
