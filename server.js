@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import connectDB from './config/db.js';
 
 // Route imports
@@ -19,7 +20,7 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: process.env.CLIENT_URL,
     credentials: true
   })
 );
@@ -38,8 +39,10 @@ app.use(async (req, res, next) => {
 
 // Health check endpoint
 app.get('/', (req, res) => {
+  const isDbConnected = mongoose.connection.readyState === 1;
   res.status(200).json({
     status: 'online',
+    database: isDbConnected ? 'connected' : 'disconnected',
     message: 'AI Chatbot API backend is running',
     version: '1.0.0',
     timestamp: new Date().toISOString()
@@ -59,10 +62,15 @@ const PORT = process.env.PORT || 5000;
 
 // Run the server locally only; Vercel handles this in production
 if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Health check available at: http://localhost:${PORT}/`);
     console.log(`Chat API route ready at: http://localhost:${PORT}/api/chat`);
+    try {
+      await connectDB();
+    } catch (err) {
+      console.error('Initial MongoDB connection error:', err.message);
+    }
   });
 }
 
