@@ -64,8 +64,8 @@ const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`);
-    console.log(`Health check available at: http://localhost:${PORT}/`);
-    console.log(`Chat API route ready at: http://localhost:${PORT}/api/chat`);
+    console.log(`Health check available at route: /`);
+    console.log(`Chat API route ready at: /api/chat`);
     try {
       await connectDB();
     } catch (err) {
