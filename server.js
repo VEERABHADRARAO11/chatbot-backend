@@ -60,18 +60,16 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// Run the server locally only; Vercel handles this in production
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, async () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`Health check available at route: /`);
-    console.log(`Chat API route ready at: /api/chat`);
-    try {
-      await connectDB();
-    } catch (err) {
-      console.error('Initial MongoDB connection error:', err.message);
-    }
-  });
-}
+app.listen(PORT, '0.0.0.0', async () => {
+  console.log(`Server is running on port ${PORT}`);
+  console.log('Health check available at route: /');
+  console.log('Chat API route ready at: /api/chat');
+
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('Initial MongoDB connection error:', err.message);
+  }
+});
 
 export default app;
