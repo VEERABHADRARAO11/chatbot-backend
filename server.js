@@ -18,9 +18,20 @@ dotenv.config();
 const app = express();
 
 // Middlewares
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173'
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
     credentials: true
   })
 );
@@ -50,9 +61,9 @@ app.get('/', (req, res) => {
 });
 
 // Mount API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/conversations', conversationRoutes);
-app.use('/api/chat', chatRoutes);
+app.use('/auth', authRoutes);
+app.use('/conversations', conversationRoutes);
+app.use('/chat', chatRoutes);
 
 // Fallback & error handling middleware
 app.use(notFoundHandler);
@@ -63,7 +74,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', async () => {
   console.log(`Server is running on port ${PORT}`);
   console.log('Health check available at route: /');
-  console.log('Chat API route ready at: /api/chat');
+  console.log('Chat API route ready at: /chat');
 
   try {
     await connectDB();

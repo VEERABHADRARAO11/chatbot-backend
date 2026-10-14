@@ -2,7 +2,7 @@ import Conversation from '../models/Conversation.js';
 import Message from '../models/Message.js';
 
 // @desc    Get all conversations for current user
-// @route   GET /api/conversations
+// @route   GET /conversations
 // @access  Private
 export const getConversations = async (req, res, next) => {
   try {
@@ -21,7 +21,7 @@ export const getConversations = async (req, res, next) => {
 };
 
 // @desc    Create a new conversation
-// @route   POST /api/conversations
+// @route   POST /conversations
 // @access  Private
 export const createConversation = async (req, res, next) => {
   try {
@@ -42,7 +42,7 @@ export const createConversation = async (req, res, next) => {
 };
 
 // @desc    Get single conversation by ID
-// @route   GET /api/conversations/:id
+// @route   GET /conversations/:id
 // @access  Private
 export const getConversationById = async (req, res, next) => {
   try {
@@ -68,7 +68,7 @@ export const getConversationById = async (req, res, next) => {
 };
 
 // @desc    Update conversation title
-// @route   PUT /api/conversations/:id
+// @route   PUT /conversations/:id
 // @access  Private
 export const updateConversation = async (req, res, next) => {
   try {
@@ -103,7 +103,7 @@ export const updateConversation = async (req, res, next) => {
 };
 
 // @desc    Delete a conversation and its messages
-// @route   DELETE /api/conversations/:id
+// @route   DELETE /conversations/:id
 // @access  Private
 export const deleteConversation = async (req, res, next) => {
   try {
@@ -135,7 +135,7 @@ export const deleteConversation = async (req, res, next) => {
 };
 
 // @desc    Get all messages for a specific conversation
-// @route   GET /api/conversations/:id/messages
+// @route   GET /conversations/:id/messages
 // @access  Private
 export const getMessagesByConversation = async (req, res, next) => {
   try {

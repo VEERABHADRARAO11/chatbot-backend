@@ -29,7 +29,7 @@ const formatGeminiHistory = (messages) => {
 };
 
 // @desc    Send a message to Gemini and get a reply (with context)
-// @route   POST /api/chat
+// @route   POST /chat
 // @access  Private
 export const sendMessage = async (req, res, next) => {
   try {

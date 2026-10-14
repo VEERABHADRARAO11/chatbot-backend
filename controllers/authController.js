@@ -10,7 +10,7 @@ const generateToken = (userId) => {
 };
 
 // @desc    Register a new user
-// @route   POST /api/auth/register
+// @route   POST /auth/register
 // @access  Public
 export const register = async (req, res, next) => {
   try {
@@ -68,7 +68,7 @@ export const register = async (req, res, next) => {
 };
 
 // @desc    Log in existing user
-// @route   POST /api/auth/login
+// @route   POST /auth/login
 // @access  Public
 export const login = async (req, res, next) => {
   try {
@@ -117,7 +117,7 @@ export const login = async (req, res, next) => {
 };
 
 // @desc    Get current user profile
-// @route   GET /api/auth/me
+// @route   GET /auth/me
 // @access  Private
 export const getMe = async (req, res) => {
   res.status(200).json({
